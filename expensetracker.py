@@ -2,36 +2,14 @@ import time
 import json
 import os
 
+DATA_PATH = os.path.expanduser('~/expenses.json')
+
 def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
-
-
-expenses = {
-'food': 0,
-'transportation': 0,
-'bills': 0,
-'fun': 0,
-'emergency': 0
-}
-
-def open_json_file():
-    try:
-        with open('expenses.json', 'r') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        return {
-        'food': 0,
-        'transportation': 0,
-        'bills': 0,
-        'fun': 0,
-        'emergency': 0
-}
-        
-expenses = open_json_file()
+    print('Screen cleared!')
 
 def add_expense():
     while True:
-        print('Please enter the category of your expense:')
         for expense in expenses:
             print(f'{expense}')
         chosen_category = input('> ').strip().lower()
@@ -40,11 +18,13 @@ def add_expense():
             continue
         else:
             try:
-                print('Please choose an expense value. (Type "0" if you made a mistake.)')
+                print('Please choose an expense value.')
                 expense_value = int(input('> '))
+                if expense_value < 0:
+                    print('Please enter a positive number.')
+                    continue
                 expenses[chosen_category] += expense_value
-                with open('expenses.json', 'w') as file:
-                    json.dump(expenses, file, indent=4)
+                save_expenses_json(expenses)
                 print('Expense successfully added!')
                 break
             except ValueError:
@@ -59,7 +39,7 @@ def view_expenses():
 
 def load_expenses_json():
     try:
-        with open('expenses.json', 'r') as file:
+        with open(DATA_PATH, 'r') as file:
             return json.load(file)
     except FileNotFoundError:
         return {
@@ -73,11 +53,8 @@ def load_expenses_json():
 
 
 def save_expenses_json(expenses):
-    with open('expenses.json', 'w') as file:
+    with open(DATA_PATH, "w") as file:
         json.dump(expenses, file, indent=4)
-
-
-expenses = load_expenses_json()
 
 def add_category():
     print('Name of your new category: ')
@@ -90,9 +67,10 @@ def add_category():
         expenses[new_cat] = 0
         save_expenses_json(expenses)
         print('Category successfully added!')
+ 
         
     
-
+expenses = load_expenses_json()
 
 
 def print_help():
@@ -104,7 +82,7 @@ quit - to quit program
 cat - to add a new category of expenses
 clear - to clear the terminal
           
-all categories:
+default categories:
 food
 transportation
 bills
