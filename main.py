@@ -1,13 +1,16 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from database import init_db, add_expense_db, get_expenses_db
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from models import Expense
 
 app = FastAPI()
 init_db()
 
-class Expense(BaseModel):
-    category: str
-    amount: int
+@app.get("/")
+def root():
+    return RedirectResponse(url="/docs")
 
 @app.post("/expenses")
 def add_expense(expense: Expense):
