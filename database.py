@@ -7,7 +7,7 @@ def get_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-def init_db():
+def init_expenses_db():
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
@@ -36,3 +36,34 @@ def get_expenses_db():
     rows = cursor.fetchall()
     conn.close()
     return rows
+
+def init_user_table():
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+        username TEXT PRIMARY KEY,
+        password TEXT NOT NULL              )
+
+    '''
+    )
+    conn.commit()
+    conn.close()
+
+
+def register_user_db(username, hashed_password):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO users (username, password) VALUES (?,?)', (username, hashed_password))
+    conn.commit()
+    conn.close()
+
+def get_user_password_hash(username: str) -> str | None:
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+    row = cursor.fetchone()
+    conn.close()
+    return row["password"] if row else None
+
+
