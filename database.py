@@ -50,13 +50,31 @@ def init_user_table():
     conn.commit()
     conn.close()
 
+def user_exists_db(username: str) -> bool:
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT username FROM users WHERE username = ?', (username,))
+    rows = cursor.fetchone()
+    if rows:
+        conn.close()
+        return True  
+    else:
+        conn.close()
+        return False
+    
 
 def register_user_db(username, hashed_password):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO users (username, password) VALUES (?,?)', (username, hashed_password))
-    conn.commit()
-    conn.close()
+    if user_exists_db(username):
+        conn.commit()
+        conn.close()
+        return False
+    else:
+        cursor.execute('INSERT INTO users (username, password) VALUES (?,?)', (username, hashed_password))
+        conn.commit()
+        conn.close()
+        return True
 
 def get_user_password_hash(username: str) -> str | None:
     conn = get_connection()

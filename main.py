@@ -34,7 +34,7 @@ def user_register(user: UserLoginAndRegistration):
     hashed_password = algo.hash(user.password)
     register_user_db(username, hashed_password)
     return {'message': 'Registration successful!'}
-
+    
 
 @app.post("/login")
 def login(user: UserLoginAndRegistration):
