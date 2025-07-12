@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Expense Tracker — Take Control of Your Money</title>
+  <link rel="stylesheet" href="/static/dark.css" />
+  <style>
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      align-items: center;
+      flex-direction: column;
+    }
+    .wrapper {
+      max-width: 900px;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2rem;
+      user-select: none;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #3a86ff;
+      margin-bottom: 0.2rem;
+    }
+    p.lead {
+      font-size: 1.25rem;
+      color: #b0b0b0;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      user-select: text;
+    }
+    .container {
+      background: #1e1e1e;
+      padding: 2.5rem 3rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      user-select: text;
+    }
+    form {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      user-select: text;
+    }
+    form h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+      color: #3a86ff;
+    }
+    input {
+      background: #2c2c2c;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      color: #e0e0e0;
+      font-size: 1rem;
+      transition: background-color 0.25s ease;
+    }
+    input::placeholder {
+      color: #777;
+    }
+    input:focus {
+      outline: none;
+      background-color: #3a3a3a;
+    }
+    button {
+      background-color: #3a86ff;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #1c5ed6;
+    }
+    @media (max-width: 700px) {
+      .container {
+        flex-direction: column;
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper" role="main">
+    <h1>Take Control of Your Expenses</h1>
+    <p class="lead">Simple, secure, and fast expense tracking.  
+      Log in or create an account to start managing your money smarter.</p>
+  </div>
+
+  <div class="container" role="form">
+    <form method="POST" action="/login" aria-label="Login form">
+      <h2>Login</h2>
+      <input type="text" name="username" placeholder="Your username" required autocomplete="username" />
+      <input type="password" name="password" placeholder="Your password" required autocomplete="current-password" />
+      <button type="submit">Log In</button>
+    </form>
+
+    <form method="POST" action="/register" aria-label="Registration form">
+      <h2>Create Account</h2>
+      <input type="text" name="username" placeholder="Choose a username" required autocomplete="username" />
+      <input type="password" name="password" placeholder="Choose a strong password" required autocomplete="new-password" />
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+
+  <footer>Made by Uğur Baştuğ</footer>
+</body>
+</html>

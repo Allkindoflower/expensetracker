@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Manage Expenses</title>
+  <link rel="stylesheet" href="/static/dark.css" />
+  <style>
+    body {
+      background: #121212;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      user-select: none;
+    }
+    h1 {
+      color: #3a86ff;
+      text-align: center;
+      font-weight: 900;
+      margin-bottom: 2rem;
+    }
+    form {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    input[type="text"],
+    input[type="number"] {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      border: none;
+      background: #2c2c2c;
+      color: #e0e0e0;
+      font-size: 1rem;
+      transition: background-color 0.25s ease;
+    }
+    input::placeholder {
+      color: #777;
+    }
+    input:focus {
+      background: #3a3a3a;
+      outline: none;
+    }
+    button {
+      padding: 0.85rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      background: #3a86ff;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background: #1c5ed6;
+    }
+    ul#expenses-list {
+      list-style: none;
+      padding: 0;
+      max-height: 350px;
+      overflow-y: auto;
+      border-top: 1px solid #333;
+    }
+    ul#expenses-list li {
+      padding: 0.7rem 0;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
+    .category {
+      color: #f9bc60;
+    }
+    .amount {
+      color: #90ee90;
+    }
+  </style>
+</head>
+<body>
+  <h1>Manage Your Expenses</h1>
+  <form id="expense-form">
+    <input type="text" name="category" placeholder="Category" required autocomplete="off" />
+    <input type="number" name="amount" placeholder="Amount" required min="0" step="0.01" />
+    <button type="submit">Add Expense</button>
+  </form>
+  <ul id="expenses-list" aria-live="polite" aria-label="List of expenses"></ul>
+
+  <script>
+    const form = document.getElementById('expense-form');
+    const expensesList = document.getElementById('expenses-list');
+
+    // Fetch existing expenses and display
+    async function loadExpenses() {
+      try {
+        const res = await fetch('/expenses');
+        if (!res.ok) throw new Error('Failed to load expenses');
+        const expenses = await res.json();
+
+        expensesList.innerHTML = '';
+        expenses.forEach(exp => {
+          const li = document.createElement('li');
+          li.innerHTML = `<span class="category">${exp.category}</span><span class="amount">${exp.amount}</span>`;
+          expensesList.appendChild(li);
+        });
+      } catch (err) {
+        expensesList.innerHTML = '<li>Error loading expenses.</li>';
+      }
+    }
+
+    // Add expense handler
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const payload = {
+        category: formData.get('category'),
+        amount: parseFloat(formData.get('amount'))
+      };
+
+      try {
+        const res = await fetch('/expenses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) throw new Error('Failed to add expense');
+
+        form.reset();
+        loadExpenses();
+      } catch (err) {
+        alert('Error adding expense. Try again.');
+      }
+    });
+
+    // Load expenses on page load
+    loadExpenses();
+  </script>
+</body>
+</html>
